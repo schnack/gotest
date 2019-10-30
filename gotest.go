@@ -54,7 +54,14 @@ func (gt *goTest) IsNil() error {
 	return fmt.Errorf("\n\nIs not nil\n\n(compared using reflect.IsNil)\n")
 }
 
-func (gt *goTest) NotIsZero() error {
+func (gt *goTest) NotNil() error {
+	if !reflect.ValueOf(gt.expect).IsNil() {
+		return nil
+	}
+	return fmt.Errorf("\n\nIs nil\n\n(compared using reflect.IsNil)\n")
+}
+
+func (gt *goTest) NotZero() error {
 	if !reflect.ValueOf(gt.expect).IsZero() {
 		return nil
 	}
