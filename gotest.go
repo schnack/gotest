@@ -15,6 +15,7 @@ func Expect(expect interface{}) GoTest {
 
 type GoTest interface {
 	Eq(v interface{}) error
+	Error(str string) error
 	Zero() error
 	NotZero() error
 	Nil() error
@@ -23,6 +24,10 @@ type GoTest interface {
 
 type goTest struct {
 	expect interface{}
+}
+
+func (gt *goTest) Error(str string) error {
+	return gt.Eq(fmt.Errorf(str))
 }
 
 func (gt *goTest) Eq(v interface{}) error {
@@ -57,15 +62,31 @@ func (gt *goTest) NotZero() error {
 }
 
 func (gt *goTest) Nil() error {
-	if reflect.ValueOf(gt.expect).IsNil() {
-		return nil
+	v := reflect.ValueOf(gt.expect)
+	switch v.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Ptr, reflect.UnsafePointer, reflect.Interface, reflect.Slice:
+		if v.IsNil() {
+			return nil
+		}
+	default:
+		if !v.IsValid() {
+			return nil
+		}
 	}
 	return fmt.Errorf("\n\nIs not nil\n\n(compared using reflect.IsNil)\n")
 }
 
 func (gt *goTest) NotNil() error {
-	if !reflect.ValueOf(gt.expect).IsNil() {
-		return nil
+	v := reflect.ValueOf(gt.expect)
+	switch v.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Ptr, reflect.UnsafePointer, reflect.Interface, reflect.Slice:
+		if !v.IsNil() {
+			return nil
+		}
+	default:
+		if v.IsValid() {
+			return nil
+		}
 	}
 	return fmt.Errorf("\n\nIs nil\n\n(compared using reflect.IsNil)\n")
 }

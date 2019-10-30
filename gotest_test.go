@@ -1,6 +1,15 @@
 package gotest
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
+
+func TestGoTest_Error(t *testing.T) {
+	if err := Expect(fmt.Errorf("test")).Error("test"); err != nil {
+		t.Error(err)
+	}
+}
 
 func TestGoTest_Eq(t *testing.T) {
 	if err := Expect("test").Eq("test"); err != nil {
@@ -20,6 +29,11 @@ func TestGoTest_Nil(t *testing.T) {
 	var param *GoTest = nil
 
 	if err := Expect(param).Nil(); err != nil {
+		t.Error(err)
+	}
+
+	var err error
+	if err := Expect(err).Nil(); err != nil {
 		t.Error(err)
 	}
 }
