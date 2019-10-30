@@ -49,6 +49,13 @@ func (gt *goTest) Zero() error {
 	return fmt.Errorf("\n\nIs not zero\n\n(compared using reflect.IsZero)\n")
 }
 
+func (gt *goTest) NotZero() error {
+	if !reflect.ValueOf(gt.expect).IsZero() {
+		return nil
+	}
+	return fmt.Errorf("\n\nIs zero\n\n(compared using reflect.IsZero)\n")
+}
+
 func (gt *goTest) Nil() error {
 	if reflect.ValueOf(gt.expect).IsNil() {
 		return nil
@@ -61,11 +68,4 @@ func (gt *goTest) NotNil() error {
 		return nil
 	}
 	return fmt.Errorf("\n\nIs nil\n\n(compared using reflect.IsNil)\n")
-}
-
-func (gt *goTest) NotZero() error {
-	if !reflect.ValueOf(gt.expect).IsZero() {
-		return nil
-	}
-	return fmt.Errorf("\n\nIs zero\n\n(compared using reflect.IsZero)\n")
 }
