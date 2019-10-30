@@ -15,8 +15,10 @@ func Expect(expect interface{}) GoTest {
 
 type GoTest interface {
 	Eq(v interface{}) error
-	IsZero() error
-	NotIsZero() error
+	Zero() error
+	NotZero() error
+	Nil() error
+	NotNil() error
 }
 
 type goTest struct {
@@ -40,14 +42,14 @@ func (gt *goTest) Eq(v interface{}) error {
 	return nil
 }
 
-func (gt *goTest) IsZero() error {
+func (gt *goTest) Zero() error {
 	if reflect.ValueOf(gt.expect).IsZero() {
 		return nil
 	}
 	return fmt.Errorf("\n\nIs not zero\n\n(compared using reflect.IsZero)\n")
 }
 
-func (gt *goTest) IsNil() error {
+func (gt *goTest) Nil() error {
 	if reflect.ValueOf(gt.expect).IsNil() {
 		return nil
 	}
