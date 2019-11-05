@@ -11,6 +11,18 @@ func TestGoTest_Error(t *testing.T) {
 	}
 }
 
+func TestGoTest_True(t *testing.T) {
+	if err := Expect(true).True(); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestGoTest_False(t *testing.T) {
+	if err := Expect(false).False(); err != nil {
+		t.Error(err)
+	}
+}
+
 func TestGoTest_Eq(t *testing.T) {
 	if err := Expect("test").Eq("test"); err != nil {
 		t.Error(err)

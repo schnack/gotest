@@ -20,6 +20,8 @@ type GoTest interface {
 	NotZero() error
 	Nil() error
 	NotNil() error
+	True() error
+	False() error
 }
 
 type goTest struct {
@@ -45,6 +47,30 @@ func (gt *goTest) Eq(v interface{}) error {
 		return fmt.Errorf("\n\nexpected: %v\n     got: %v\n\n(compared using reflect.DeepEqual)\n", sample, expect)
 	}
 	return nil
+}
+
+func (gt *goTest) True() error {
+	switch x := gt.expect.(type) {
+	case bool:
+		if x {
+			return nil
+		}
+		return fmt.Errorf("\n\nIs not true\n")
+	default:
+		return fmt.Errorf("\n\nIs not bool type\n")
+	}
+}
+
+func (gt *goTest) False() error {
+	switch x := gt.expect.(type) {
+	case bool:
+		if !x {
+			return nil
+		}
+		return fmt.Errorf("\n\nIs not false\n")
+	default:
+		return fmt.Errorf("\n\nIs not bool type\n")
+	}
 }
 
 func (gt *goTest) Zero() error {
