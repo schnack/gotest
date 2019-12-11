@@ -16,6 +16,7 @@ func Expect(expect interface{}) GoTest {
 type GoTest interface {
 	Eq(v interface{}) error
 	Error(str string) error
+	NotError() error
 	Zero() error
 	NotZero() error
 	Nil() error
@@ -30,6 +31,10 @@ type goTest struct {
 
 func (gt *goTest) Error(str string) error {
 	return gt.Eq(fmt.Errorf(str))
+}
+
+func (gt *goTest) NotError() error {
+	return gt.Eq(nil)
 }
 
 func (gt *goTest) Eq(v interface{}) error {
